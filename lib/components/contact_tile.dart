@@ -1,14 +1,19 @@
 // ignore_for_file: prefer_const_constructors
-
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:contact_list_flutter/models/contact_model.dart';
 import 'package:flutter/material.dart';
 
-Widget contactTile(ContactModel contact) {
+Widget contactTile(Results contact) {
   return Row(
     children: [
-      Image(
-        image: AssetImage(contact.imagePath ?? 'images/people1.png'),
-        width: 100,
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Image(
+          image: AssetImage(contact.imagePath != "none"
+              ? contact.imagePath!
+              : 'images/default.png'),
+          width: 50,
+        ),
       ),
       Expanded(
         child: Padding(
@@ -25,8 +30,20 @@ Widget contactTile(ContactModel contact) {
       ),
       Container(
         padding: EdgeInsets.all(10),
-        child: IconButton(onPressed: () {}, icon: Icon(Icons.phone)),
-      )
+        child: IconButton(
+            onPressed: () async {
+              await FlutterPhoneDirectCaller.callNumber(contact.phoneNumber!);
+            },
+            icon: Icon(Icons.phone)),
+      ),
     ],
   );
 }
+
+
+/*
+
+() async {
+                FlutterPhoneDirectCaller.callNumber(_numberCtrl.text);
+
+*/

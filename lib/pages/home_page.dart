@@ -1,5 +1,6 @@
-// ignore_for_file: prefer_const_constructors
-
+import 'package:contact_list_flutter/components/contact_tile.dart';
+import 'package:contact_list_flutter/models/contact_model.dart';
+import 'package:contact_list_flutter/storage/contacts_web_storage.dart';
 import 'package:flutter/material.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -12,14 +13,23 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  var data = [
-    {"nome": "ana", "numero": "11990212176", "image_path": ""},
-    {
-      "nome": "ana",
-      "numero": "11990212176",
-      "image_path": 'images/people1.png'
-    },
-  ];
+  var contacts = ContactsRepository();
+  List<Results> data = [];
+  bool loading = false;
+
+  @override
+  void initState() {
+    carregarDados();
+    super.initState();
+  }
+
+  carregarDados() async {
+    loading = true;
+    var contatos = await contacts.getAll();
+    data = contatos.results!;
+    loading = false;
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +38,13 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: Center(),
+      body: Center(
+          child: (loading)
+              ? const CircularProgressIndicator()
+              : ListView.builder(
+                  itemBuilder: (context, index) => contactTile(data[index]),
+                  itemCount: data.length,
+                )),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
         tooltip: 'Increment',

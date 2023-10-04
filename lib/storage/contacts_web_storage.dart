@@ -5,7 +5,7 @@ import 'package:dio/dio.dart';
 class ContactsRepository {
   final Dio _dio = Dio();
 
-  ContactModel() {
+  ContactsRepository() {
     String apiKey = "X-Parse-REST-API-Key";
     String appId = "X-Parse-Application-Id";
     String baseUrl = "BASE-URL";
@@ -17,9 +17,9 @@ class ContactsRepository {
     _dio.options.baseUrl = dotenv.get(baseUrl);
   }
 
-  Future<List<Results>> getAll() async {
+  Future<ContactModel> getAll() async {
     var response = await _dio.get("/");
-    return ContactModel().fromJson(response.data);
+    return ContactModel.fromJson(response.data);
   }
 
   Future<Results> getById(String id) async {
